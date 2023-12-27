@@ -1,0 +1,112 @@
+* {
+    box-sizing: border-box;
+    object-fit: cover;
+}
+body {
+    font-family: "Roboto", sans-serif;
+}
+.top {
+    background-color: #EC362D;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 69px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    z-index: 4;
+}
+h1 {
+    font-size: 40px;
+    font-weight: 700;
+    color: white;
+}
+.main { 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 146px;
+}
+.yourQuizzes {
+    border: 1px solid #D4D4D4;
+    width: 1051px;
+    height: 181px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+p {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 23px;
+    color: #B9B9B9;
+    text-align: center;
+}
+button {
+    border: 1px dashed #EC362D;
+    color: #EC362D;
+    border-radius: 50px;
+    width: 151px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 400;
+    background-color: white;
+}
+button:hover {
+    cursor: pointer;
+}
+.allQuizzes {
+    display: flex;
+    width: 1051px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 77px;
+    margin-bottom: 12px;
+    width:1051px;
+}
+.quizz img {
+    width: 340px;
+    height: 181px;
+    border-radius: 5px;
+}
+.quizz{
+    position: relative;
+    width: 340px;
+    height: 181px;
+    margin-bottom: 12px;
+}
+h3{
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 22px;
+    color: white;
+    position: absolute;
+    left: 18px;
+    bottom: 7px;
+    width: 301px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    cursor: pointer;
+}
+.gradient {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5) 64.58%, #000000 100%);
+    z-index: 1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
