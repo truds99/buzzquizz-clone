@@ -66,20 +66,59 @@ function openQuizz(quizz) {
     const allQuestions = document.querySelector(".allQuestions");
     for (let i=0; i<quizz.data.questions.length; i++) {
         allQuestions.innerHTML += `
-            <div class="question">
+            <div class="question    unanswered">
                 <h5>${quizz.data.questions[i].title}</h5>
                 <div class="allAnswers"></div>
             </div>`;
         const allAnswers = allQuestions.lastChild.querySelector(".allAnswers");
+        quizz.data.questions[i].answers.sort(comparador);
         for (let j=0; j<quizz.data.questions[i].answers.length; j++) {
             allAnswers.innerHTML += `
-                <div class="answer" class="${quizz.data.questions[i].answers[j].isCorrectAnswer}">
+                <div class="answer ${quizz.data.questions[i].answers[j].isCorrectAnswer}" onclick="selectAnswer(this)">
                     <img src="${quizz.data.questions[i].answers[j].image}">
                     <h6>${quizz.data.questions[i].answers[j].text}</h6>
                 </div>`
         }
     }
+    main.innerHTML += `
+        `
 }   
+
+function comparador() { 
+	return Math.random() - 0.5; 
+}
+
+function selectAnswer(answer) {
+    const question = answer.parentNode;
+    if (!question.parentNode.classList.contains("unanswered")){
+        return;
+    }
+    question.parentNode.classList.remove("unanswered");
+    const answers = question.querySelectorAll(".answer");
+    answers.forEach(elm => {
+        if(elm !== answer) {
+            elm.firstElementChild.classList.add("opacity");
+        }
+        if(elm.classList.contains("true")){
+            elm.lastElementChild.classList.add("true");
+        }
+        else {
+            elm.lastElementChild.classList.add("false");
+        }
+    });
+    setTimeout(scrollPage, 2000);
+}
+
+function scrollPage() {
+    const unanswered = document.querySelector(".unanswered");
+    const result = document.querySelector(".result");
+    if (unanswered) {
+        unanswered.scrollIntoView();
+    }
+    else {
+        result.scrollIntoView();
+    }
+}
 
 getQuizzes();
 

@@ -195,3 +195,12 @@ h6 {
     font-weight: 700;
     margin: 8px 0 18.5px 0;
 }
+.opacity {
+    opacity: 30%;
+}
+h6.true {
+    color: green;
+}
+h6.false {
+    color: red;
+}
