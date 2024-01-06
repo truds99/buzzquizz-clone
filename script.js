@@ -1,5 +1,6 @@
 const urlAPI = "https://mock-api.driven.com.br/api/v4/buzzquizz/";
 const main = document.querySelector(".main");
+let hits = 0, qttQuestions, levels;
 
 function getQuizzes() {
     const promise = axios.get(`${urlAPI}quizzes`);
@@ -56,6 +57,8 @@ function getOnlyQuizz (quizz) {
 }
 
 function openQuizz(quizz) {
+    qttQuestions = quizz.data.questions.length;
+    levels = quizz.data.levels;
     main.innerHTML= `
         <div class="title">
             <img src="${quizz.data.image}" alt="${quizz.data.title}">
@@ -64,10 +67,11 @@ function openQuizz(quizz) {
         </div>
         <div class="allQuestions"></div>`;
     const allQuestions = document.querySelector(".allQuestions");
-    for (let i=0; i<quizz.data.questions.length; i++) {
+    for (let i=0; i<qttQuestions; i++) {
+        let backgroundColor = setBackground();
         allQuestions.innerHTML += `
-            <div class="question    unanswered">
-                <h5>${quizz.data.questions[i].title}</h5>
+            <div class="question unanswered">
+                <h5 class="${backgroundColor}">${quizz.data.questions[i].title}</h5>
                 <div class="allAnswers"></div>
             </div>`;
         const allAnswers = allQuestions.lastChild.querySelector(".allAnswers");
@@ -80,13 +84,8 @@ function openQuizz(quizz) {
                 </div>`
         }
     }
-    main.innerHTML += `
-        `
 }   
 
-function comparador() { 
-	return Math.random() - 0.5; 
-}
 
 function selectAnswer(answer) {
     const question = answer.parentNode;
@@ -106,17 +105,61 @@ function selectAnswer(answer) {
             elm.lastElementChild.classList.add("false");
         }
     });
+    if (answer.classList.contains("true")){
+        hits ++;
+    }
     setTimeout(scrollPage, 2000);
+}
+
+function comparador() { 
+	return Math.random() - 0.5; 
 }
 
 function scrollPage() {
     const unanswered = document.querySelector(".unanswered");
-    const result = document.querySelector(".result");
     if (unanswered) {
         unanswered.scrollIntoView();
     }
     else {
-        result.scrollIntoView();
+        renderResult();
+    }
+}
+
+function renderResult() {
+    const allQuestions = document.querySelector(".allQuestions");
+    hitsPct = Math.round(hits*100/qttQuestions);
+    const getLevel = calcLevel(hitsPct);
+    allQuestions.innerHTML += `
+        <div class="result">
+            <h5 class="backgroundRed">${hitsPct}% de acerto: ${levels[getLevel].title}</h5>
+            <div class="resultContent">
+                <img src="${levels[getLevel].image}">
+                <p>${levels[getLevel].text}</p>
+            </div>
+        </div>`;
+    const result = document.querySelector(".result");
+    result.scrollIntoView();
+}
+
+function calcLevel(n) {
+    let x = 0;
+    for (let i=0; i<levels.length; i++) {
+        if (n >= levels[i].minValue) {
+            x = i;
+        }
+    }
+    return x;
+} 
+
+function setBackground () {
+    let colors = [1, 2, 3, 4, 5];
+    colors.sort(comparador);
+    switch (colors[0]) {
+        case 1: return "backgroundBlue";
+        case 2: return "backgroundGreen";
+        case 3: return "backgroundYellow";
+        case 4: return "backgroundPurple";
+        case 5: return "backgroundRed";
     }
 }
 
