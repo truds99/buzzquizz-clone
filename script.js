@@ -1,6 +1,6 @@
 const urlAPI = "https://mock-api.driven.com.br/api/v4/buzzquizz/";
 const main = document.querySelector(".main");
-let hits = 0, qttQuestions, levels;
+let hits = 0, qttQuestions, levels, timeout, quizzID;
 
 function getQuizzes() {
     const promise = axios.get(`${urlAPI}quizzes`);
@@ -59,22 +59,23 @@ function getOnlyQuizz (quizz) {
 function openQuizz(quizz) {
     qttQuestions = quizz.data.questions.length;
     levels = quizz.data.levels;
+    quizzID = quizz.data.id;
     main.innerHTML= `
         <div class="title">
             <img src="${quizz.data.image}" alt="${quizz.data.title}">
             <h4>${quizz.data.title}</h4>
             <div class="blackLay"></div>
         </div>
-        <div class="allQuestions"></div>`;
-    const allQuestions = document.querySelector(".allQuestions");
+        <div class="mainContent"></div>`;
+    const mainContent = document.querySelector(".mainContent");
     for (let i=0; i<qttQuestions; i++) {
         let backgroundColor = setBackground();
-        allQuestions.innerHTML += `
+        mainContent.innerHTML += `
             <div class="question unanswered">
                 <h5 class="${backgroundColor}">${quizz.data.questions[i].title}</h5>
                 <div class="allAnswers"></div>
             </div>`;
-        const allAnswers = allQuestions.lastChild.querySelector(".allAnswers");
+        const allAnswers = mainContent.lastChild.querySelector(".allAnswers");
         quizz.data.questions[i].answers.sort(comparador);
         for (let j=0; j<quizz.data.questions[i].answers.length; j++) {
             allAnswers.innerHTML += `
@@ -84,14 +85,15 @@ function openQuizz(quizz) {
                 </div>`
         }
     }
+    window.scrollTo(0, 0);
 }   
-
 
 function selectAnswer(answer) {
     const question = answer.parentNode;
     if (!question.parentNode.classList.contains("unanswered")){
         return;
     }
+    clearTimeout(timeout);
     question.parentNode.classList.remove("unanswered");
     const answers = question.querySelectorAll(".answer");
     answers.forEach(elm => {
@@ -108,7 +110,7 @@ function selectAnswer(answer) {
     if (answer.classList.contains("true")){
         hits ++;
     }
-    setTimeout(scrollPage, 2000);
+    timeout = setTimeout(scrollPage, 2000);
 }
 
 function comparador() { 
@@ -126,10 +128,10 @@ function scrollPage() {
 }
 
 function renderResult() {
-    const allQuestions = document.querySelector(".allQuestions");
+    const mainContent = document.querySelector(".mainContent");
     hitsPct = Math.round(hits*100/qttQuestions);
     const getLevel = calcLevel(hitsPct);
-    allQuestions.innerHTML += `
+    mainContent.innerHTML += `
         <div class="result">
             <h5 class="backgroundRed">${hitsPct}% de acerto: ${levels[getLevel].title}</h5>
             <div class="resultContent">
@@ -137,6 +139,9 @@ function renderResult() {
                 <p>${levels[getLevel].text}</p>
             </div>
         </div>`;
+    mainContent.innerHTML += `
+        <button class="restart" onclick="restartQuizz(${quizzID})">Restart Quizz</button>
+        <button class="toHome" onclick="window.location.reload()">Back to homepage</button>`
     const result = document.querySelector(".result");
     result.scrollIntoView();
 }
@@ -161,6 +166,11 @@ function setBackground () {
         case 4: return "backgroundPurple";
         case 5: return "backgroundRed";
     }
+}
+
+function restartQuizz(id) {
+    hits = 0;
+    getOnlyQuizz(id);
 }
 
 getQuizzes();
