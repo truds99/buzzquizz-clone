@@ -27,7 +27,7 @@ function renderQuizzes(response) {
         yourQuizzes.innerHTML = `
             <div class="noQuizz">
                 <p>You haven't created any<br/>quizzes yet :(</p>
-                <button>Create Quizz</button>
+                <button onclick="renderCreationPage()">Create Quizz</button>
             </div>`
     }
     const savedQuizzes = JSON.parse(savedQuizzesString);
@@ -69,12 +69,12 @@ function openQuizz(quizz) {
         <div class="mainContent"></div>`;
     const mainContent = document.querySelector(".mainContent");
     for (let i=0; i<qttQuestions; i++) {
-        let backgroundColor = setBackground();
         mainContent.innerHTML += `
             <div class="question unanswered">
-                <h5 class="${backgroundColor}">${quizz.data.questions[i].title}</h5>
+                <h5>${quizz.data.questions[i].title}</h5>
                 <div class="allAnswers"></div>
             </div>`;
+        mainContent.lastElementChild.firstElementChild.style.backgroundColor = `${quizz.data.questions[i].color}`
         const allAnswers = mainContent.lastChild.querySelector(".allAnswers");
         quizz.data.questions[i].answers.sort(comparador);
         for (let j=0; j<quizz.data.questions[i].answers.length; j++) {
@@ -132,6 +132,7 @@ function renderResult() {
     hitsPct = Math.round(hits*100/qttQuestions);
     const getLevel = calcLevel(hitsPct);
     mainContent.innerHTML += `
+        <div class="auxScroll"></div>
         <div class="result">
             <h5 class="backgroundRed">${hitsPct}% de acerto: ${levels[getLevel].title}</h5>
             <div class="resultContent">
@@ -142,8 +143,8 @@ function renderResult() {
     mainContent.innerHTML += `
         <button class="restart" onclick="restartQuizz(${quizzID})">Restart Quizz</button>
         <button class="toHome" onclick="window.location.reload()">Back to homepage</button>`
-    const result = document.querySelector(".result");
-    result.scrollIntoView();
+    const auxScroll = document.querySelector(".auxScroll");
+    auxScroll.scrollIntoView();
 }
 
 function calcLevel(n) {
@@ -155,18 +156,6 @@ function calcLevel(n) {
     }
     return x;
 } 
-
-function setBackground () {
-    let colors = [1, 2, 3, 4, 5];
-    colors.sort(comparador);
-    switch (colors[0]) {
-        case 1: return "backgroundBlue";
-        case 2: return "backgroundGreen";
-        case 3: return "backgroundYellow";
-        case 4: return "backgroundPurple";
-        case 5: return "backgroundRed";
-    }
-}
 
 function restartQuizz(id) {
     hits = 0;

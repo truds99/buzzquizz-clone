@@ -206,6 +206,7 @@ h6.false {
 .result {
     background-color: #FFFFFF;
     box-shadow: 0px 0px 4px 0px #00000040;
+    margin-top: 30px;
     margin-bottom: 42px;
     display: flex;
     flex-direction: column;
@@ -213,21 +214,6 @@ h6.false {
     align-items: center;
     width: 759px;
     height: 430px;
-}
-.backgroundBlue {
-    background-color: #5db6ff;
-}
-.backgroundGreen {
-    background-color: #51ff4b;
-}
-.backgroundYellow {
-    background-color: #d8ff28;
-}
-.backgroundPurple {
-    background-color: #A0438D;
-}
-.backgroundRed {
-    background-color: #EC362D;
 }
 .resultContent {
     display: flex;
@@ -264,7 +250,7 @@ h6.false {
     font-size: 21px;
     font-weight: 400;
     text-align: center;
-    color: #FFFFFF;
+    color: #FFF5F4;
 }
 .toHome {
     width: 220px;
@@ -278,4 +264,155 @@ h6.false {
 }
 .toHome:hover {
     text-decoration: underline;
+}
+.auxScroll {
+    border: none;
+    background: none;
+    height: 30px;
+    width: 1px;
+}
+.creationPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.creationPage p {
+    font-size: 23px;
+    font-weight: 700;
+    color: #000000;
+    margin-top: 140px;
+}
+.createInputs {
+    margin-top: 27px;
+    width: 600px;
+    height: 256px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px 0px #0000000D;
+    justify-content: space-between;
+    padding: 21px 0 21px 0;
+}
+.createInputs input {
+    width: 564px;
+    height: 46px;
+    border-radius: 5px;
+    border: 1px solid #D1D1D1;
+}
+input:focus {
+    outline: none;
+}
+.createInputs input::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-size: 19px;
+    font-style: italic;
+    font-weight: 400;
+    padding-left: 10px;
+}
+.createQuizz {
+    width: 370px;
+    height: 54px;
+    border-radius: 15px;
+    background-color: #EC362D;
+    font-size: 21px;
+    font-weight: 400;
+    text-align: center;
+    color: #FFF5F4;
+    margin-top: 85px;
+}
+.creationQuestionsPage {
+    margin-top: 132px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.creationQuestionsTitle {
+    font-size: 23px;
+    font-weight: 700;
+    color: #000000;
+}
+.creationQuestions p {
+    width: 564px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: left;
+    color: #000000;
+    margin-top: 27px;
+    margin-bottom: 12.5px;
+}
+.creationQuestions {
+    position: relative;
+    width: 600px;
+    max-height: 825px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 10px 0px #0000000D;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-bottom: 20px;
+}
+.creationQuestions input {
+    width: 564px;
+    height: 46px;
+    border-radius: 5px;
+    border: 1px solid #D1D1D1;
+}
+.incorrectAnswer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 106px;
+    margin-bottom: 27.5px;
+}
+.correctAnswer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 106px;
+}
+.creationQuestions input::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-size: 19px;
+    font-style: italic;
+    font-weight: 400;
+    padding-left: 10px;
+}
+.creationQuestionsPage button {
+    width: 355px;
+    height: 54px;
+    border-radius: 15px;
+    background-color: #EC362D;
+    font-size: 21px;
+    font-weight: 400;
+    text-align: center;
+    color: #FFF5F4;
+    margin-bottom: 55px;
+}
+ion-icon {
+    position: absolute;
+    width: 26px;
+    height: 24px;
+    top: 20px;
+    right: 20px;
+}
+ion-icon:hover {
+    cursor: pointer;
+}
+.titleQuestion {
+    margin-bottom: 12.5px;
+}
+.hidden {
+    display: none;
+}
+.inline {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
