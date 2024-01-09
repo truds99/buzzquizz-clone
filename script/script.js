@@ -17,7 +17,7 @@ function renderQuizzes(response) {
         </div>`;
     const yourQuizzes = document.querySelector(".yourQuizzes");
     const quizzes = document.querySelector(".allQuizzes");
-    const savedQuizzesString = localStorage.getItem("ids");
+    let savedQuizzesString = localStorage.getItem("ids");
     const titleYourQuizzes = document.querySelector(".titleYourQuizzes");
     if(!savedQuizzesString){
         savedQuizzesString = "[]";
@@ -163,4 +163,6 @@ function restartQuizz(id) {
 }
 
 getQuizzes();
+
+
 

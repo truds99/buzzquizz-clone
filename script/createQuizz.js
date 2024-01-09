@@ -1,5 +1,4 @@
-let title, image, qttQuestionsCreated, qttLevelsCreated;
-let createdQuestions=[], createdBackgrounds=[], createdCorrectTexts=[], createdCorrectImages=[], createdIncorrectAnswers=[];
+let title, image, qttQuestionsCreated, qttLevelsCreated, objectQuizz = {};
 
 function renderCreationPage() {
     main.innerHTML = `
@@ -37,6 +36,8 @@ function createQuizz() {
         return;
     }
     title = createTitle.value, image = createImage.value, qttQuestionsCreated = createQttQuestions.value, qttLevelsCreated = createQttLevels.value;
+    objectQuizz["title"] = title;
+    objectQuizz["image"] = image;
     renderCreateQuestions();
 }
 
@@ -95,22 +96,44 @@ function createQuestions() {
     const incorrectImage2 = document.querySelectorAll(".incorrectImage2");
     const incorrectText3 = document.querySelectorAll(".incorrectText3");
     const incorrectImage3 = document.querySelectorAll(".incorrectImage3");
+    let objectQuestions = [];
 
     for (let i=0; i<creationQuestions.length; i++) {
-        let createdIncorrectGroup=[];
-        createdQuestions.push(titleQuestions[i].value);
-        createdBackgrounds.push(colorQuestions[i].value);
-        createdCorrectTexts.push(correctTexts[i].value);
-        createdCorrectImages.push(correctImages[i].value);
-        createdIncorrectGroup.push({text: incorrectText1[i].value, image: incorrectImage1[i].value});
+        let answersGroup=[];
+       
+        answersGroup.push({
+            text: correctTexts[i].value,
+            image: correctImages[i].value,
+            isCorrectAnswer: true
+        });
+        answersGroup.push({
+            text: incorrectText1[i].value,
+            image: incorrectImage1[i].value,
+            isCorrectAnswer: false
+        })
         if (incorrectText2[i].value !== "") {
-            createdIncorrectGroup.push({text: incorrectText2[i].value, image: incorrectImage2[i].value});
+            answersGroup.push({
+                text: incorrectText2[i].value,
+                image: incorrectImage2[i].value,
+                isCorrectAnswer: false
+            })
         }
         if (incorrectText3[i].value !== "") {
-            createdIncorrectGroup.push({text: incorrectText3[i].value, image: incorrectImage3[i].value});
+            answersGroup.push({
+                text: incorrectText3[i].value,
+                image: incorrectImage3[i].value,
+                isCorrectAnswer: false
+            })
         }
-        createdIncorrectAnswers[i] = createdIncorrectGroup;        
+        
+        objectQuestions.push({
+            title: titleQuestions[i].value,
+            color: colorQuestions[i].value,
+            answers: answersGroup
+        });   
     }
+
+    objectQuizz["questions"] = objectQuestions;
 
     renderCreateLevels();
 
@@ -132,36 +155,57 @@ function checkInputsQuestions() {
                 alert("Title must cointain at least 20 characters");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+                return inputs;
+        }
         colorQuestions.forEach(elm => {
             if (!isColor(elm)) {
                 alert("Enter a valid hexadecimal color");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+            return inputs;
+        }
         correctTexts.forEach(elm => { 
             if (elm.value === "") {
                 alert("Enter a correct answer");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+            return inputs;
+        }
         correctImages.forEach(elm => {
             if (!isUrl(elm.value)){
                 alert("Enter a valid URL in all correct answers");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+            return inputs;
+        }
         incorrectText1.forEach(elm => { 
             if (elm.value === "") {
                 alert("Enter at least one incorrect answer in each question");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+            return inputs;
+        }
         incorrectImage1.forEach(elm => {
             if (!isUrl(elm.value)){
                 alert("Enter a valid URL in each incorrect answers");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+            return inputs;
+        }
         incorrectText2.forEach(elm => {
             if ((elm.value === "" && elm.nextElementSibling.value !== "") || (elm.value !== "" && !isUrl(elm.nextElementSibling.value))){
                 alert("Enter valid incorrect answers");
                 inputs = "invalid";
             }});
+        if (inputs === "invalid") {
+            return inputs;
+        }
         incorrectText3.forEach(elm => {
             if ((elm.value === "" && elm.nextElementSibling.value !== "") || (elm.value !== "" && !isUrl(elm.nextElementSibling.value))){
                 alert("Enter valid incorrect answers");
@@ -171,7 +215,26 @@ function checkInputsQuestions() {
 }
 
 function renderCreateLevels() {
-
+    main.innerHTML = `
+    <div class="creationLevelsPage">
+        <p class="creationQuestionsTitle">Create your levels</p>
+    </div>`;
+    const creationLevelsPage = document.querySelector(".creationLevelsPage");
+    for (let i=0; i<qttLevelsCreated; i++) {
+        creationLevelsPage.innerHTML += `
+            <div class="creationLevels">
+                <ion-icon onclick="toggleExpand(this);" name="open-outline"></ion-icon>
+                <p>Level ${i+1}</p>
+                <div class="inline levelInputs">
+                    <input class="titleLevel" type="text" placeholder="Question text">
+                    <input class="minValue" type="text" placeholder="Minimum percentage of hits">
+                    <input class="urlImageLevel" type="text" placeholder="Image URL">
+                    <input class="levelDescription" type="text" placeholder="Level description">
+                </div>
+            </div>`;
+    }
+    creationLevelsPage.innerHTML += `
+        <button onclick="createLevels()">Finish Quizz</button>`
 }
 
 function toggleExpand(elm) {
@@ -185,8 +248,122 @@ function isUrl(url) {
     return rule.test(url);
 }
 
-  function isColor(color) {
+function isColor(color) {
     const rule =
     /^#[0-9A-F]{6}$/i
     return rule.test(color.value);
+}
+
+function createLevels() {
+
+    if (checkInputsLevels() === "invalid") {
+        return;
+    }
+   
+    const titleLevel = document.querySelectorAll(".titleLevel");
+    const minValue = document.querySelectorAll(".minValue");
+    const urlImageLevel = document.querySelectorAll(".urlImageLevel");
+    const levelDescription = document.querySelectorAll(".levelDescription");
+    let arrayLevels = [];
+    
+    for (let i=0; i<qttLevelsCreated; i++) {
+        arrayLevels.push ({
+            title: titleLevel[i].value,
+            image: urlImageLevel[i].value,
+            text: levelDescription[i].value,
+            minValue: minValue[i].value
+        });
+    }
+
+    objectQuizz["levels"] = arrayLevels;
+
+    postQuizz(objectQuizz);
+}
+
+function checkInputsLevels() {
+    let inputs = "valid";
+    const titleLevel = document.querySelectorAll(".titleLevel");
+    const minValue = document.querySelectorAll(".minValue");
+    const urlImageLevel = document.querySelectorAll(".urlImageLevel");
+    const levelDescription = document.querySelectorAll(".levelDescription");
+    let contMinValue = 0;
+
+    titleLevel.forEach (elm => {
+        if(elm.value.length < 10 || typeof(elm.value) !== "string"){
+            alert("Level title must cointain at least 10 characters");
+            inputs = "invalid";
+        }
+    });
+    if (inputs === "invalid") {
+        return inputs;
+    }
+    minValue.forEach (elm => {
+        if(!(elm.value >= 0 && elm.value <= 100)){
+            alert("Enter a percentage between 0 and 100");
+            inputs = "invalid";
+        }
+        if (elm.value == 0) {
+            contMinValue++;
+        }
+    });
+    if (contMinValue !== 1) {
+        alert("One minimum percentage must be 0");
+        inputs = "invalid";
+    }
+    if (inputs === "invalid") {
+        return inputs;
+    }
+    urlImageLevel.forEach(elm => {
+        if (!isUrl(elm.value)){
+            alert("Enter a valid URL in all levels");
+            inputs = "invalid";
+        }
+    });
+    if (inputs === "invalid") {
+        return inputs;
+    }
+    levelDescription.forEach (elm => {
+        if(elm.value.length < 30 || typeof(elm.value) !== "string"){
+            alert("Level description must cointain at least 30 characters");
+            inputs = "invalid";
+        }
+    })
+    return inputs;
+}
+
+function postQuizz(readyQuizz) {
+    const promise = axios.post(`${urlAPI}quizzes`, readyQuizz);
+    promise
+        .catch(alert("Error sending quiz"))
+        .then(renderFinishCreation);
+}
+
+function renderFinishCreation(response) {
+    saveOnLocalStorage(response.data.id);
+    main.innerHTML = `
+        <div class="finishCreationPage">
+            <p class="creationQuestionsTitle">Your quizz is finished!</p>
+            <div class="quizz" onclick="getOnlyQuizz(${response.data.id})">
+                <img src="${response.data.image}" alt="">
+                <h3>${response.data.title}</h3>
+                <div class="gradient"></div> 
+            </div>
+            <button class="access" onclick="getOnlyQuizz(${response.data.id})">Access quiz</button>
+            <button class="toHome" onclick="window.location.reload()">Back to homepage</button>
+        </div>`;
+}
+
+function saveOnLocalStorage(id){
+    let oldQuizzesString = localStorage.getItem("ids");
+    if (oldQuizzes) {
+        let oldQuizzes = JSON.parse(oldQuizzesString);
+        let newQuizzes = oldQuizzes.push(id);
+        let newQuizzesString = JSON.stringify(newQuizzes);
+        localStorage.setItem(newQuizzesString);
+    }
+    else {
+        let newQuizzes = [id];
+        let newQuizzesString = JSON.stringify(newQuizzes);
+        localStorage.setItem(newQuizzesString);
+    }
 }
