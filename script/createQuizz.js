@@ -367,3 +367,18 @@ function saveOnLocalStorage(id){
         localStorage.setItem(newQuizzesString);
     }
 }
+
+document.addEventListener("keyup", function (event) {
+    if (event.key === "Enter" && document.querySelector(".createInputs")) {
+        createQuizz();
+        return;
+    }
+    if (event.key === "Enter" && document.querySelector(".creationQuestions")) {
+        createQuestions();
+        return;
+    }
+    if (event.key === "Enter" && document.querySelector(".creationLevels")) {
+        createLevels();
+        return;
+    }
+});

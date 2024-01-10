@@ -10,6 +10,7 @@ function getQuizzes() {
 function renderQuizzes(response) {
     main.innerHTML = `
         <div class="mainScreen">
+            <ion-icon class="buttonCreate" onclick="renderCreationPage()" name="add-circle"></ion-icon>
             <h2 class="titleYourQuizzes">Your Quizzes</h2>
             <div class="yourQuizzes"></div>
             <h2>All Quizzes</h2>
@@ -23,6 +24,7 @@ function renderQuizzes(response) {
         savedQuizzesString = "[]";
     }
     if(savedQuizzesString === "[]"){
+        document.querySelector(".buttonCreate").classList.add("hidden");
         titleYourQuizzes.innerHTML = "";
         yourQuizzes.innerHTML = `
             <div class="noQuizz">
@@ -41,12 +43,12 @@ function renderQuizzes(response) {
                 </div>`
         }
         else{
-        quizzes.innerHTML += `
-            <div class="quizz" onclick="getOnlyQuizz(${response.data[i].id})">
-                <img src="${response.data[i].image}">
-                <h3>${response.data[i].title}</h3>
-                <div class="gradient"></div>    
-            </div>`
+            quizzes.innerHTML += `
+                <div class="quizz" onclick="getOnlyQuizz(${response.data[i].id})">
+                    <img src="${response.data[i].image}">
+                    <h3>${response.data[i].title}</h3>
+                    <div class="gradient"></div>    
+                </div>`
         }
     }
 }
