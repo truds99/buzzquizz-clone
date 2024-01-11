@@ -10,11 +10,13 @@ function getQuizzes() {
 function renderQuizzes(response) {
     main.innerHTML = `
         <div class="mainScreen">
-            <ion-icon class="buttonCreate" onclick="renderCreationPage()" name="add-circle"></ion-icon>
             <h2 class="titleYourQuizzes">Your Quizzes</h2>
-            <div class="yourQuizzes"></div>
+            <div class="yourQuizzes">
+            <ion-icon class="buttonCreate" onclick="renderCreationPage()" name="add-circle"></ion-icon>
+            </div>
             <h2>All Quizzes</h2>
-            <div class="allQuizzes"></div>
+            <div class="allQuizzes">
+            </div>
         </div>`;
     const yourQuizzes = document.querySelector(".yourQuizzes");
     const quizzes = document.querySelector(".allQuizzes");
@@ -68,16 +70,16 @@ function openQuizz(quizz) {
             <h4>${quizz.data.title}</h4>
             <div class="blackLay"></div>
         </div>
-        <div class="mainContent"></div>`;
-    const mainContent = document.querySelector(".mainContent");
+        <div class="quizzContent"></div>`;
+    const quizzContent = document.querySelector(".quizzContent");
     for (let i=0; i<qttQuestions; i++) {
-        mainContent.innerHTML += `
+        quizzContent.innerHTML += `
             <div class="question unanswered">
                 <h5>${quizz.data.questions[i].title}</h5>
                 <div class="allAnswers"></div>
             </div>`;
-        mainContent.lastElementChild.firstElementChild.style.backgroundColor = `${quizz.data.questions[i].color}`
-        const allAnswers = mainContent.lastChild.querySelector(".allAnswers");
+        quizzContent.lastElementChild.firstElementChild.style.backgroundColor = `${quizz.data.questions[i].color}`
+        const allAnswers = quizzContent.lastChild.querySelector(".allAnswers");
         quizz.data.questions[i].answers.sort(comparador);
         for (let j=0; j<quizz.data.questions[i].answers.length; j++) {
             allAnswers.innerHTML += `
@@ -123,6 +125,7 @@ function scrollPage() {
     const unanswered = document.querySelector(".unanswered");
     if (unanswered) {
         unanswered.scrollIntoView();
+        scrollBy(0, -30);
     }
     else {
         renderResult();
@@ -130,10 +133,10 @@ function scrollPage() {
 }
 
 function renderResult() {
-    const mainContent = document.querySelector(".mainContent");
+    const quizzContent = document.querySelector(".quizzContent");
     hitsPct = Math.round(hits*100/qttQuestions);
     const getLevel = calcLevel(hitsPct);
-    mainContent.innerHTML += `
+    quizzContent.innerHTML += `
         <div class="auxScroll"></div>
         <div class="result">
             <h5 class="backgroundRed">${hitsPct}% de acerto: ${levels[getLevel].title}</h5>
@@ -142,7 +145,7 @@ function renderResult() {
                 <p>${levels[getLevel].text}</p>
             </div>
         </div>`;
-    mainContent.innerHTML += `
+    quizzContent.innerHTML += `
         <button class="restart" onclick="restartQuizz(${quizzID})">Restart Quizz</button>
         <button class="toHome" onclick="window.location.reload()">Back to homepage</button>`
     const auxScroll = document.querySelector(".auxScroll");
@@ -162,6 +165,8 @@ function calcLevel(n) {
 function restartQuizz(id) {
     hits = 0;
     getOnlyQuizz(id);
+    const title = document.querySelector(".title");
+    title.scrollIntoView();
 }
 
 getQuizzes();

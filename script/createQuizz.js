@@ -199,7 +199,7 @@ function checkInputsQuestions() {
             return inputs;
         }
         incorrectText2.forEach(elm => {
-            if ((elm.value === "" && elm.nextElementSibling.value !== "") || (elm.value !== "" && !isUrl(elm.nextElementSibling.value))){
+            if ((elm.value === "" && elm.parentNode.lastElementChild.value !== "") || (elm.value !== "" && !isUrl(elm.parentNode.lastElementChild.value))){
                 alert("Enter valid incorrect answers");
                 inputs = "invalid";
             }});
@@ -207,7 +207,7 @@ function checkInputsQuestions() {
             return inputs;
         }
         incorrectText3.forEach(elm => {
-            if ((elm.value === "" && elm.nextElementSibling.value !== "") || (elm.value !== "" && !isUrl(elm.nextElementSibling.value))){
+            if ((elm.value === "" && elm.parentNode.lastElementChild.value !== "") || (elm.value !== "" && !isUrl(elm.parentNode.lastElementChild.value))){
                 alert("Enter valid incorrect answers");
                 inputs = "invalid";
             }});    
@@ -226,7 +226,7 @@ function renderCreateLevels() {
                 <ion-icon onclick="toggleExpand(this);" name="open-outline"></ion-icon>
                 <p>Level ${i+1}</p>
                 <div class="inline levelInputs">
-                    <input class="titleLevel" type="text" placeholder="Question text">
+                    <input class="titleLevel" type="text" placeholder="Level text">
                     <input class="minValue" type="text" placeholder="Minimum percentage of hits">
                     <input class="urlImageLevel" type="text" placeholder="Image URL">
                     <input class="levelDescription" type="text" placeholder="Level description">
@@ -334,7 +334,7 @@ function checkInputsLevels() {
 function postQuizz(readyQuizz) {
     const promise = axios.post(`${urlAPI}quizzes`, readyQuizz);
     promise
-        .catch(alert("Error sending quiz"))
+        .catch(error)
         .then(renderFinishCreation);
 }
 
@@ -355,16 +355,16 @@ function renderFinishCreation(response) {
 
 function saveOnLocalStorage(id){
     let oldQuizzesString = localStorage.getItem("ids");
-    if (oldQuizzes) {
+    if (oldQuizzesString) {
         let oldQuizzes = JSON.parse(oldQuizzesString);
-        let newQuizzes = oldQuizzes.push(id);
-        let newQuizzesString = JSON.stringify(newQuizzes);
-        localStorage.setItem(newQuizzesString);
+        oldQuizzes.push(id);
+        let newQuizzesString = JSON.stringify(oldQuizzes);
+        localStorage.setItem("ids", newQuizzesString);
     }
     else {
         let newQuizzes = [id];
         let newQuizzesString = JSON.stringify(newQuizzes);
-        localStorage.setItem(newQuizzesString);
+        localStorage.setItem("ids", newQuizzesString);
     }
 }
 
@@ -382,3 +382,7 @@ document.addEventListener("keyup", function (event) {
         return;
     }
 });
+
+function error() {
+    alert("error sending quizz"); 
+}

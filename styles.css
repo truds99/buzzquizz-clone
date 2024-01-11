@@ -5,6 +5,15 @@
 body {
     font-family: "Roboto", sans-serif;
     background-color: #FAFAFA;
+    overflow-x: hidden;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 0 20px;
+    margin-top: 69px;
 }
 .top {
     background-color: #EC362D;
@@ -26,20 +35,27 @@ h1 {
     cursor: pointer;
 }
 .mainScreen { 
+    width: 1050px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 146px;
+    margin-top: 75px;
     position: relative;
 }
+
 .yourQuizzes {
+    position: relative;
     display: flex;
-    width: 1081px;
+    width: 1065px;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin-left: 7.5px;
     margin-bottom: 77px;
+    overflow-x: visible;
+}
+.yourQuizzes .quizz {
+    margin-right: 7.5px;
+    margin-left: 7.5px;
 }
 .noQuizz {
     border: 1px solid #D4D4D4;
@@ -72,20 +88,20 @@ button:hover {
 }
 .allQuizzes {
     display: flex;
-    width: 1081px;
+    width: 1050px;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    margin-left: 7.5px;
+    justify-content: space-between;
     margin-bottom: 77px;
 }
 h2 {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 12px;
-    width:1051px;
+    width:100%;
+    text-align: left;
 }
 .quizz img {
-    width: 340px;
+    width: 100%;
     height: 181px;
     border-radius: 5px;
 }
@@ -93,7 +109,7 @@ h2 {
     position: relative;
     width: 340px;
     height: 181px;
-    margin: 0 7.5px 12px 7.5px;
+    margin-bottom: 12px;
     cursor: pointer;
 }
 h3{
@@ -104,7 +120,7 @@ h3{
     position: absolute;
     left: 18px;
     bottom: 7px;
-    width: 301px;
+    width: 90%;
     height: 54px;
     display: flex;
     align-items: center;
@@ -121,9 +137,8 @@ h3{
     border-radius: 5px;
 }
 .title {
-    width: 100%;
+    width: 100vw;
     height: 227px;
-    margin-top: 69px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -149,7 +164,7 @@ h4 {
     width: 100%;
     height: 100%;
 }
-.mainContent {
+.mainContent, .quizzContent {
     margin-top: 42px;
     display: flex;
     flex-direction: column;
@@ -157,15 +172,17 @@ h4 {
     align-items: center;
 }
 .question {
+    padding-top: 28px;
+    padding-bottom: 18px;
     width: 759px;
-    height: 676px;
     background-color: #FFFFFF;
     box-shadow: 0px 0px 4px 0px #00000040;
     margin-bottom: 42px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
+
 }
 h5 {
     width: 688px;
@@ -178,8 +195,10 @@ h5 {
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding: 0 8px 0 8px;
 }
 .allAnswers {
+    margin-top: 20px;
     width: 688px;
     display: flex;
     flex-wrap: wrap;
@@ -283,7 +302,7 @@ h6.false {
     font-size: 23px;
     font-weight: 700;
     color: #000000;
-    margin-top: 140px;
+    margin-top: 71px;
 }
 .createInputs {
     margin-top: 27px;
@@ -325,7 +344,7 @@ input:focus {
     margin-top: 85px;
 }
 .creationQuestionsPage, .finishCreationPage {
-    margin-top: 132px;
+    margin-top: 63px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -431,7 +450,7 @@ ion-icon:hover {
     position: relative;
 }
 .creationLevelsPage {
-    margin-top: 132px;
+    margin-top: 63px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -504,9 +523,177 @@ ion-icon:hover {
     height: 30px;
     position: absolute;
     color: #EC362D;
-    top: -5px;
-    left: 270px;
+    top: -37px;
+    left: 128px;
 }
+@media (min-width: 751px) and (max-width: 1100px) {
+    .allQuizzes, h2 {
+        width: 695px;
+    }
+    .yourQuizzes {
+        width: 710px;
+    }
+    .question {
+        width: 100%;
+    }
+    .mainContent {
+        max-width: 100%;
+    }
+    .question .img {
+        max-width: 100%;
+    }
+    h4 {
+        max-width: 100%;
+    }
+    .creationPage p {
+        font-size: 20px;
+    }
+    .createQuizz {
+        margin-top: 30px;
+   }
+}
+@media (max-width: 750px) {
+    * {
+        overflow-x: hidden;
+    }
 
+    .main {
+        width: 100vw;
+    }
+    .mainScreen {
+        width: 100%;
+        margin-top: 38px;
+        align-items: center;
+    }
+    h2 {
+        margin-left: 7.5px;
+    }
+    h1 {
+        font-size: 37px;
+        overflow-y: hidden;
+    }
+    .yourQuizzes, .allQuizzes {
+        flex-direction: column;
+        max-width: 100%;
+        margin-left: 0;
+        margin-bottom: 38px;
+        justify-content: center;
+    }
+    .quizz {
+        margin: 0 0 14px 0;
+        overflow-y: hidden;
+        width: 100%;
+    }
+    .yourQuizzes .quizz {
+        margin: 0 0 14px 0;
+    }
+    .noQuizz {
+        width: 100%;
+    }
+    .title {
+        width: 100vw;
+        height: 142px;
+    }
+    h4 {
+        font-size: 19px;
+    }
+    .question {
+        width: 100vw;
+    }
+    h5 {
+        width: 90.9%;
+        height: 89px;
+        font-size: 19px;
+    }
+    .question img {
+        width: 100%;
+        height: 113px;
+    }
+    .allAnswers {
+        width: 90.9%;
+    }
+    .mainScreen ion-icon {
+        top: -35px;
+        right: 30px;
+    }
+    .mainContent {
+        width: 100%;
+    }
+    .answer {
+        width: 48%;
+        max-width: 48%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    h6 {
+        width: 100%;
+        font-size: 14.5px;
+        overflow-y: hidden;
+        text-align: left;
+        margin-left: 0;
+    }
+    
+    .result h5 {
+        margin-top: 30px;
+        height: 99px;
+        
+    }
+    .resultContent {
+        flex-direction: column;
+    }
+    .resultContent img {
+        width: 100%;
+        max-width: 100%;
+        margin: 9px 0;
+    }
+    .quizzContent, .creationQuestionsPage, .creationLevelsPage {
+        width: 109%;
+    }
+    .resultContent p {
+        width: 100%;
+        max-width: 100%;
+    }
+    .creationPage p {
+        font-size: 20px;
+    }
+    .creationPage, .creationLevels, .createInputs, .createInputs input, .correctAnswer, .incorrectAnswer, .finishCreationPage,
+    .creationQuestions input, .inline p, .creationQuestions, .inline, button, .creationLevels input, .result {
+        max-width: 100%;
+    }
+    .creationLevels, .creationQuestions {
+        width: 100%;
+    }
+    
+   .createQuizz {
+        margin-top: 30px;
+        max-width: 100%;
+   }
+   .creationQuestionsTitle, .creationQuestions p {
+        font-size: 20px;
+        max-width: 100%;
+   }
+   .creationLevels p, .levelInputs, .result h5, .resultContent,
+   .creationQuestions p, .creationQuestions .inline {
+        max-width: 90.9%;
+   }
+   .inline {
+        align-items: center;
+   }
+   .creationLevels ion-icon, .creationQuestions ion-icon {
+        right: 4.5vw;
+   }
+   .inline p {
+        width: 100%;
+        max-width: 100%;
+   }
+   .resultContent p{
+        text-overflow: ellipsis;
+   }
+   .finishCreationPage .quizz {
+        max-width: 90.9%;
+   }
+   
+}
 
     
