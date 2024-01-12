@@ -339,7 +339,7 @@ function postQuizz(readyQuizz) {
 }
 
 function renderFinishCreation(response) {
-    saveOnLocalStorage(response.data.id);
+    saveOnLocalStorage(response.data.id, response.data.key);
     main.innerHTML = `
         <div class="finishCreationPage">
             <p class="creationQuestionsTitle">Your quizz is finished!</p>
@@ -353,16 +353,16 @@ function renderFinishCreation(response) {
         </div>`;
 }
 
-function saveOnLocalStorage(id){
+function saveOnLocalStorage(id, key){
     let oldQuizzesString = localStorage.getItem("ids");
     if (oldQuizzesString) {
         let oldQuizzes = JSON.parse(oldQuizzesString);
-        oldQuizzes.push(id);
+        oldQuizzes.push({"id": id, "key": key});
         let newQuizzesString = JSON.stringify(oldQuizzes);
         localStorage.setItem("ids", newQuizzesString);
     }
     else {
-        let newQuizzes = [id];
+        let newQuizzes = [{"id": id, "key": key}];
         let newQuizzesString = JSON.stringify(newQuizzes);
         localStorage.setItem("ids", newQuizzesString);
     }

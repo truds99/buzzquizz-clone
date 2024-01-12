@@ -36,12 +36,16 @@ function renderQuizzes(response) {
     }
     const savedQuizzes = JSON.parse(savedQuizzesString);
     for (let i=0; i<response.data.length; i++) {
-        if(savedQuizzes.includes(response.data[i].id)){
+        if(hasID(savedQuizzes, response.data[i].id)){
             yourQuizzes.innerHTML += `
                 <div class="quizz" onclick="getOnlyQuizz(${response.data[i].id})">
                     <img src="${response.data[i].image}">
                     <h3>${response.data[i].title}</h3>
-                    <div class="gradient"></div>    
+                    <div class="gradient"></div>  
+                    <div class="editAndDelete" onclick="event.stopPropagation()">
+                        <ion-icon class="edit" name="create-outline"></ion-icon>
+                        <ion-icon class="delete" name="trash-outline" onclick="getKey(${response.data[i].id})"></ion-icon>
+                    </div>  
                 </div>`
         }
         else{
@@ -167,6 +171,53 @@ function restartQuizz(id) {
     getOnlyQuizz(id);
     const title = document.querySelector(".title");
     title.scrollIntoView();
+}
+
+function getKey(idDelete) {
+    if (confirm("Are you sure you want to delete this quiz?")) {
+        let keyDel;
+        let toDelete;
+        let url = `${urlAPI}quizzes/${idDelete}`;
+        const userQuizzes = JSON.parse(localStorage.getItem("ids"));
+        for (let i=0; i<userQuizzes.length; i++) {
+            if (userQuizzes[i].id === idDelete) {
+                keyDel = userQuizzes[i].key;
+                toDelete = i;     
+            }
+        }
+        deleteQuizz(url, keyDel, toDelete);
+    }
+}
+
+function hasID (arr, id) {
+    for (let i=0; i<arr.length; i++) {
+        if (Object.values(arr[i]).includes(id)) {
+            return true;
+        }
+    }
+    return false;
+} 
+
+async function deleteQuizz (url, key, i) {
+    try {
+        const response = await axios.delete(url, {
+            headers: {
+                "Secret-Key": key
+            }
+        })
+        deleteFromStorage(i);
+        window.location.reload();
+    }
+    catch (error) {
+        alert("error deleting quizz");
+    }
+}
+
+function deleteFromStorage(i) {
+    let userQuizzes = JSON.parse(localStorage.getItem("ids"));
+    userQuizzes.splice(i, 1);
+    let newQuizzes = JSON.stringify(userQuizzes);
+    localStorage.setItem("ids", newQuizzes);
 }
 
 getQuizzes();
