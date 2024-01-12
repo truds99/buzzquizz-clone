@@ -12,7 +12,7 @@ function renderQuizzes(response) {
         <div class="mainScreen">
             <h2 class="titleYourQuizzes">Your Quizzes</h2>
             <div class="yourQuizzes">
-            <ion-icon class="buttonCreate" onclick="renderCreationPage()" name="add-circle"></ion-icon>
+            <ion-icon class="buttonCreate" onclick="renderCreationPage(isEdition)" name="add-circle"></ion-icon>
             </div>
             <h2>All Quizzes</h2>
             <div class="allQuizzes">
@@ -31,7 +31,7 @@ function renderQuizzes(response) {
         yourQuizzes.innerHTML = `
             <div class="noQuizz">
                 <p>You haven't created any<br/>quizzes yet :(</p>
-                <button onclick="renderCreationPage()">Create Quizz</button>
+                <button onclick="renderCreationPage(isEdition)">Create Quizz</button>
             </div>`
     }
     const savedQuizzes = JSON.parse(savedQuizzesString);
@@ -43,7 +43,7 @@ function renderQuizzes(response) {
                     <h3>${response.data[i].title}</h3>
                     <div class="gradient"></div>  
                     <div class="editAndDelete" onclick="event.stopPropagation()">
-                        <ion-icon class="edit" name="create-outline"></ion-icon>
+                        <ion-icon class="edit" name="create-outline" onclick="editQuizz(${response.data[i].id})"></ion-icon>
                         <ion-icon class="delete" name="trash-outline" onclick="getKey(${response.data[i].id})"></ion-icon>
                     </div>  
                 </div>`

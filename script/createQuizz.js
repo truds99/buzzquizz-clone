@@ -1,4 +1,4 @@
-let title, image, qttQuestionsCreated, qttLevelsCreated, objectQuizz = {};
+let title, image, qttQuestionsCreated, qttLevelsCreated, objectQuizz = {}, isEdition = false, quizzEditing;
 
 function renderCreationPage() {
     main.innerHTML = `
@@ -10,8 +10,18 @@ function renderCreationPage() {
                 <input class="createQttQuestions" placeholder="Number of questions" type="text">
                 <input class="createQttLevels" placeholder="Number of levels" type="text">
             </div>
-            <button class="createQuizz" onclick="createQuizz()">Continue to create questions</button>
+            <button class="createQuizz" onclick="createQuizz(isEdition, quizzEditing)">Continue to create questions</button>
         </div>`
+    if(isEdition) {
+        const createTitle = document.querySelector(".createTitle");
+        const createImage = document.querySelector(".createImage");
+        const createQttQuestions = document.querySelector(".createQttQuestions");
+        const createQttLevels = document.querySelector(".createQttLevels");
+        createTitle.value = quizzEditing.title;
+        createImage.value = quizzEditing.image;
+        createQttQuestions.value = quizzEditing.questions.length;
+        createQttLevels.value = quizzEditing.levels.length;
+    }
 }
 
 function createQuizz() {
@@ -78,6 +88,37 @@ function renderCreateQuestions() {
     }
     creationQuestionsPage.innerHTML += `
         <button onclick="createQuestions()">Continue to create levels</button>`
+    if(isEdition) {
+        const creationQuestions = document.querySelectorAll(".creationQuestions");
+        const titleQuestions = document.querySelectorAll(".titleQuestion");
+        const colorQuestions = document.querySelectorAll(".backgroundQuestion");
+        const correctTexts = document.querySelectorAll(".correctText");
+        const correctImages = document.querySelectorAll(".correctImage");
+        const incorrectText1 = document.querySelectorAll(".incorrectText1");
+        const incorrectImage1 = document.querySelectorAll(".incorrectImage1");
+        const incorrectText2 = document.querySelectorAll(".incorrectText2");
+        const incorrectImage2 = document.querySelectorAll(".incorrectImage2");
+        const incorrectText3 = document.querySelectorAll(".incorrectText3");
+        const incorrectImage3 = document.querySelectorAll(".incorrectImage3");
+        for (let j=0; j<creationQuestions.length; j++) {
+            if (quizzEditing.questions[j]) {
+                titleQuestions[j].value = quizzEditing.questions[j].title;
+                colorQuestions[j].value = quizzEditing.questions[j].color;
+                correctTexts[j].value = quizzEditing.questions[j].answers[0].text;
+                correctImages[j].value = quizzEditing.questions[j].answers[0].image;
+                incorrectText1[j].value = quizzEditing.questions[j].answers[1].text;
+                incorrectImage1[j].value = quizzEditing.questions[j].answers[1].image;
+                if (quizzEditing.questions[j].answers[2]) {
+                    incorrectText2[j].value = quizzEditing.questions[j].answers[2].text;
+                    incorrectImage2[j].value = quizzEditing.questions[j].answers[2].image;
+                }
+                if (quizzEditing.questions[j].answers[3]) {
+                    incorrectText3[j].value = quizzEditing.questions[j].answers[3].text;
+                    incorrectImage3[j].value = quizzEditing.questions[j].answers[3].image;
+                }
+            }
+        }
+    }
 }
 
 function createQuestions() {
@@ -235,6 +276,20 @@ function renderCreateLevels() {
     }
     creationLevelsPage.innerHTML += `
         <button onclick="createLevels()">Finish Quizz</button>`
+    if(isEdition) {
+        const titleLevel = document.querySelectorAll(".titleLevel");
+        const minValue = document.querySelectorAll(".minValue");
+        const urlImageLevel = document.querySelectorAll(".urlImageLevel");
+        const levelDescription = document.querySelectorAll(".levelDescription");
+        for (let j=0; j<qttLevelsCreated; j++) {
+            if (quizzEditing.levels[j]) {
+                titleLevel[j].value = quizzEditing.levels[j].title;
+                minValue[j].value = quizzEditing.levels[j].minValue;
+                urlImageLevel[j].value = quizzEditing.levels[j].image;
+                levelDescription[j].value = quizzEditing.levels[j].text;
+            }
+        }
+    }
 }
 
 function toggleExpand(elm) {
@@ -332,23 +387,44 @@ function checkInputsLevels() {
 }
 
 function postQuizz(readyQuizz) {
+    if(!isEdition) {
     const promise = axios.post(`${urlAPI}quizzes`, readyQuizz);
     promise
         .catch(error)
         .then(renderFinishCreation);
+    }
+    else {
+        let keyEdit;
+        const userQuizzes = JSON.parse(localStorage.getItem("ids"));
+        for (let i=0; i<userQuizzes.length; i++) {
+            if (userQuizzes[i].id === quizzEditing.id) {
+                keyEdit = userQuizzes[i].key;     
+            }
+        }
+        const promise2 = axios.put(`${urlAPI}quizzes/${quizzEditing.id}`, readyQuizz, {
+            headers: {
+                "Secret-Key": keyEdit
+            }
+        });
+        promise2
+            .catch(error)
+            .then(renderFinishCreation);
+    }
 }
 
 function renderFinishCreation(response) {
-    saveOnLocalStorage(response.data.id, response.data.key);
+    if (!isEdition) {
+        saveOnLocalStorage(response.data.id, response.data.key);
+    }
     main.innerHTML = `
         <div class="finishCreationPage">
             <p class="creationQuestionsTitle">Your quizz is finished!</p>
-            <div class="quizz" onclick="getOnlyQuizz(${response.data.id})">
-                <img src="${response.data.image}" alt="">
-                <h3>${response.data.title}</h3>
+            <div class="quizz" onclick="getOnlyQuizz(${quizzEditing.id})">
+                <img src="${quizzEditing.image}" alt="">
+                <h3>${quizzEditing.title}</h3>
                 <div class="gradient"></div> 
             </div>
-            <button class="access" onclick="getOnlyQuizz(${response.data.id})">Access quiz</button>
+            <button class="access" onclick="getOnlyQuizz(${quizzEditing.id})">Access quiz</button>
             <button class="toHome" onclick="window.location.reload()">Back to homepage</button>
         </div>`;
 }
@@ -385,4 +461,20 @@ document.addEventListener("keyup", function (event) {
 
 function error() {
     alert("error sending quizz"); 
+}
+
+async function editQuizz(idEdit) {
+    try {
+        const response = await axios.get(`${urlAPI}quizzes/${idEdit}`);
+        renderEditPage(response.data);
+    }
+    catch {
+        alert("error editing quizz");
+    }       
+}
+
+function renderEditPage(quizz) {
+    isEdition = true;
+    quizzEditing = quizz;
+    renderCreationPage();
 }

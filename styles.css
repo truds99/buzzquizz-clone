@@ -268,6 +268,9 @@ h6.false {
     justify-content: space-between;
     width: 727px;
 }
+.resultContent p{
+    text-overflow: ellipsis;
+}
 .result img {
     width: 364px;
     height: 273px;
@@ -283,6 +286,7 @@ h6.false {
 .result h5 {
     width: 727px;
     height: 99px;
+    text-overflow: ellipsis;
 }
 .restart {
     align-self: center;
@@ -714,9 +718,9 @@ ion-icon:hover {
         width: 100%;
         max-width: 100%;
    }
-   .resultContent p{
-        text-overflow: ellipsis;
-   }
+    .resultContent p{
+            text-overflow: ellipsis;
+    }
    .finishCreationPage .quizz {
         max-width: 90.9%;
    }
