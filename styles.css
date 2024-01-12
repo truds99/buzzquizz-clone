@@ -335,6 +335,28 @@ h6.false {
     color: #000000;
     margin-top: 71px;
 }
+.loader {
+    position: fixed;
+    z-index: 6;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+[alt="spinner gif"] {
+    width:150px;
+    height: 150px;
+}
+.loader p {
+    font-size: 25px;
+    font-weight: 400;
+    color: #EC362D;
+}
 .createInputs {
     margin-top: 27px;
     width: 600px;

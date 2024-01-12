@@ -3,6 +3,7 @@ const main = document.querySelector(".main");
 let hits = 0, qttQuestions, levels, timeout, quizzID;
 
 function getQuizzes() {
+    loading();
     const promise = axios.get(`${urlAPI}quizzes`);
     promise.then(renderQuizzes);
 }
@@ -60,6 +61,7 @@ function renderQuizzes(response) {
 }
 
 function getOnlyQuizz (quizz) {
+    loading();
     const promise = axios.get(`${urlAPI}quizzes/${quizz}`);
     promise.then(openQuizz);
 }
@@ -84,7 +86,7 @@ function openQuizz(quizz) {
             </div>`;
         quizzContent.lastElementChild.firstElementChild.style.backgroundColor = `${quizz.data.questions[i].color}`
         const allAnswers = quizzContent.lastChild.querySelector(".allAnswers");
-        quizz.data.questions[i].answers.sort(comparador);
+        quizz.data.questions[i].answers.sort(comparer);
         for (let j=0; j<quizz.data.questions[i].answers.length; j++) {
             allAnswers.innerHTML += `
                 <div class="answer ${quizz.data.questions[i].answers[j].isCorrectAnswer}" onclick="selectAnswer(this)">
@@ -121,7 +123,7 @@ function selectAnswer(answer) {
     timeout = setTimeout(scrollPage, 2000);
 }
 
-function comparador() { 
+function comparer() { 
 	return Math.random() - 0.5; 
 }
 
@@ -175,6 +177,7 @@ function restartQuizz(id) {
 
 function getKey(idDelete) {
     if (confirm("Are you sure you want to delete this quiz?")) {
+        loading();
         let keyDel;
         let toDelete;
         let url = `${urlAPI}quizzes/${idDelete}`;
@@ -210,6 +213,7 @@ async function deleteQuizz (url, key, i) {
     }
     catch (error) {
         alert("error deleting quizz");
+        window.location.reload();
     }
 }
 
@@ -218,6 +222,14 @@ function deleteFromStorage(i) {
     userQuizzes.splice(i, 1);
     let newQuizzes = JSON.stringify(userQuizzes);
     localStorage.setItem("ids", newQuizzes);
+}
+
+function loading() {
+    main.innerHTML = `
+    <div class="loader">
+        <img src="images/sppiner.gif" alt="spinner gif">
+        <p>Loading...</p>
+    </div>`
 }
 
 getQuizzes();

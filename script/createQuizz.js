@@ -387,6 +387,7 @@ function checkInputsLevels() {
 }
 
 function postQuizz(readyQuizz) {
+    loading();
     if(!isEdition) {
     const promise = axios.post(`${urlAPI}quizzes`, readyQuizz);
     promise
