@@ -411,6 +411,7 @@ function postQuizz(readyQuizz) {
         });
         promise2
             .catch(error)
+            .catch(renderCreateLevels)
             .then(renderFinishCreation);
     }
 }
@@ -447,8 +448,8 @@ function saveOnLocalStorage(id, key){
     }
 }
 
-function error() {
-    alert("error sending quizz"); 
+function error(error) {
+    alert(`Error ${error.response.status}: ${error.response.data} `); 
 }
 
 async function editQuizz(idEdit) {
@@ -514,3 +515,5 @@ function checkInputsInitial() {
 
     return inputs;
 }
+
+getQuizzes();

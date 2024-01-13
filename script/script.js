@@ -5,7 +5,10 @@ let hits = 0, qttQuestions, levels, timeout, quizzID;
 function getQuizzes() {
     loading();
     const promise = axios.get(`${urlAPI}quizzes`);
-    promise.then(renderQuizzes);
+    promise
+        .catch(error)
+        .catch(getQuizzes)
+        .then(renderQuizzes);
 }
 
 function renderQuizzes(response) {
@@ -63,7 +66,10 @@ function renderQuizzes(response) {
 function getOnlyQuizz (quizz) {
     loading();
     const promise = axios.get(`${urlAPI}quizzes/${quizz}`);
-    promise.then(openQuizz);
+    promise
+        .catch(error)
+        .catch(getQuizzes)
+        .then(openQuizz);
 }
 
 function openQuizz(quizz) {
@@ -232,7 +238,6 @@ function loading() {
         </div>`
 }
 
-getQuizzes();
 
 
 
