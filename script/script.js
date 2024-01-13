@@ -226,10 +226,10 @@ function deleteFromStorage(i) {
 
 function loading() {
     main.innerHTML = `
-    <div class="loader">
-        <img src="images/sppiner.gif" alt="spinner gif">
-        <p>Loading...</p>
-    </div>`
+        <div class="loader">
+            <img src="images/sppiner.gif" alt="spinner gif">
+            <p>Loading...</p>
+        </div>`
 }
 
 getQuizzes();

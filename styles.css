@@ -335,6 +335,10 @@ h6.false {
     color: #000000;
     margin-top: 71px;
 }
+.creationPage button {
+    margin-top: 0;
+    margin-bottom: 71px;
+}
 .loader {
     position: fixed;
     z-index: 6;
@@ -360,10 +364,8 @@ h6.false {
 .createInputs {
     margin-top: 27px;
     width: 600px;
-    height: 256px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 10px 0px #0000000D;
     justify-content: space-between;
@@ -374,6 +376,7 @@ h6.false {
     height: 46px;
     border-radius: 5px;
     border: 1px solid #D1D1D1;
+    margin-bottom: 15px;
 }
 input:focus {
     outline: none;
@@ -420,7 +423,6 @@ input:focus {
 .creationQuestions {
     position: relative;
     width: 600px;
-    max-height: 825px;
     background-color: #FFFFFF;
     box-shadow: 0px 0px 10px 0px #0000000D;
     display: flex;
@@ -435,13 +437,13 @@ input:focus {
     height: 46px;
     border-radius: 5px;
     border: 1px solid #D1D1D1;
+    margin-bottom: 15px;
 }
 .incorrectAnswer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 106px;
     margin-bottom: 27.5px;
 }
 .correctAnswer {
@@ -449,7 +451,6 @@ input:focus {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 106px;
 }
 .creationQuestions input::placeholder {
     font-family: 'Roboto', sans-serif;
@@ -478,9 +479,6 @@ ion-icon {
 }
 ion-icon:hover {
     cursor: pointer;
-}
-.titleQuestion {
-    margin-bottom: 12.5px;
 }
 .hidden {
     display: none;
@@ -521,10 +519,10 @@ ion-icon:hover {
     height: 46px;
     border-radius: 5px;
     border: 1px solid #D1D1D1;
+    margin-bottom: 15px;
 }
 .levelInputs {
     justify-content: space-between;
-    height: 226px;
 }
 .creationLevelsPage button {
     width: 355px;
@@ -536,7 +534,7 @@ ion-icon:hover {
     text-align: center;
     color: #FFF5F4;
     margin-top: 30px;
-    margin-bottom: 55px;
+    margin-bottom: 75px;
 }
 .finishCreationPage img {
     width: 500px;
@@ -579,6 +577,19 @@ ion-icon:hover {
     top: -37px;
     left: 128px;
 }
+.inputInvalid {
+    background-color: #ffb5b9;
+}
+.inline .invalidText, .creationPage .invalidText { 
+    font-size: 16px;
+    font-weight: 400;
+    color: #EC362D;
+    margin: 0 0 20px 0;
+    width: 564px;
+}
+.creationPage .invalidText {
+    text-align: left;
+}
 @media (min-width: 751px) and (max-width: 1100px) {
     .allQuizzes, h2 {
         width: 695px;
@@ -604,6 +615,10 @@ ion-icon:hover {
     .createQuizz {
         margin-top: 30px;
    }
+   .creationPage .invalidText {
+        max-width: 100%;
+        margin: 0;
+    }
 }
 @media (max-width: 750px) {
     * {
@@ -746,7 +761,16 @@ ion-icon:hover {
    .finishCreationPage .quizz {
         max-width: 90.9%;
    }
-   
+   .inline .invalidText, .creationPage .invalidText{
+        font-size: 13.5px;
+   }
+   p, h1, h2, h3, h4, h5, h6 {
+        overflow-y: hidden;
+   }
+   .creationPage .invalidText {
+        max-width: 100%;
+        margin: 0;
+    }
 }
 
     

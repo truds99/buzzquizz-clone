@@ -1,16 +1,35 @@
 let title, image, qttQuestionsCreated, qttLevelsCreated, objectQuizz = {}, isEdition = false, quizzEditing;
 
+document.addEventListener("keyup", function (event) {
+    if (event.key === "Enter" && document.querySelector(".createInputs")) {
+        createQuizz();
+        return;
+    }
+    if (event.key === "Enter" && document.querySelector(".creationQuestions")) {
+        createQuestions();
+        return;
+    }
+    if (event.key === "Enter" && document.querySelector(".creationLevels")) {
+        createLevels();
+        return;
+    }
+});
+
 function renderCreationPage() {
     main.innerHTML = `
         <div class="creationPage">
             <p>Start at the beginning</p>
             <div class="createInputs">
                 <input class="createTitle" placeholder="Title" type="text">
+                <p class="invalidText hidden">Between 20 and 65 characters</p>
                 <input class="createImage" placeholder="Your quizz's image URL" type="text">
+                <p class="invalidText hidden">Enter a valid URL</p>
                 <input class="createQttQuestions" placeholder="Number of questions" type="text">
+                <p class="invalidText hidden">At least 3 questions</p>
                 <input class="createQttLevels" placeholder="Number of levels" type="text">
+                <p class="invalidText hidden">At least 2 levels</p>
             </div>
-            <button class="createQuizz" onclick="createQuizz(isEdition, quizzEditing)">Continue to create questions</button>
+            <button class="createQuizz" onclick="createQuizz()">Continue to create questions</button>
         </div>`
     if(isEdition) {
         const createTitle = document.querySelector(".createTitle");
@@ -25,27 +44,18 @@ function renderCreationPage() {
 }
 
 function createQuizz() {
+    if (checkInputsInitial() === "invalid") {
+        return;
+    }
+
     const createTitle = document.querySelector(".createTitle");
     const createImage = document.querySelector(".createImage");
     const createQttQuestions = document.querySelector(".createQttQuestions");
     const createQttLevels = document.querySelector(".createQttLevels");
-    if (createTitle.value.length < 20 || createTitle.value.length > 65) {
-        alert("The title must contain between 20 and 65 characters");
-        return;
-    }
-    if (!isUrl(createImage.value)){
-        alert("Enter a valid URL");
-        return;
-    }
-    if (createQttQuestions.value < 3 || isNaN(createQttQuestions.value)){
-        alert("The quiz must contains at least 3 questions");
-        return;
-    }
-    if (createQttLevels.value < 2 || isNaN(createQttLevels.value)){
-        alert("The quiz must contains at least 2 levels");
-        return;
-    }
-    title = createTitle.value, image = createImage.value, qttQuestionsCreated = createQttQuestions.value, qttLevelsCreated = createQttLevels.value;
+
+    
+    title = createTitle.value, image = createImage.value, qttQuestionsCreated = createQttQuestions.value,
+    qttLevelsCreated = createQttLevels.value;
     objectQuizz["title"] = title;
     objectQuizz["image"] = image;
     renderCreateQuestions();
@@ -64,24 +74,34 @@ function renderCreateQuestions() {
                 <p>Question ${i+1}</p>
                 <div class="inline">
                     <input class="titleQuestion" type="text" placeholder="Question text">
+                    <p class="invalidText hidden">At least 20 characters</p>
                     <input class="backgroundQuestion" type="text" placeholder="Question's background color">
+                    <p class="invalidText hidden">Enter a valid hexadecimal color</p>
                     <p>Correct answer</p>
                     <div class="correctAnswer">
                         <input class="correctText" type="text" placeholder="Correct answer">
+                        <p class="invalidText hidden">Enter a correct answer</p>
                         <input class="correctImage" type="text" placeholder="Image URL">
+                        <p class="invalidText hidden">Enter a valid URL</p>
                     </div>
                     <p>Incorrect answers</p>
                     <div class="incorrectAnswer">
                         <input class="incorrectText1" type="text" placeholder="Incorrect answer 1">
+                        <p class="invalidText hidden">Enter at least one incorrect answer</p>
                         <input class="incorrectImage1" type="text" placeholder="Image URL 1">
+                        <p class="invalidText hidden">Enter a valid URL</p>
                     </div>
                     <div class="incorrectAnswer">
                         <input class="incorrectText2" type="text" placeholder="Incorrect answer 2">
+                        <p class="invalidText hidden">Enter valid incorrect answers</p>
                         <input class="incorrectImage2" type="text" placeholder="Image URL 2">
+                        <p class="invalidText hidden">Enter valid incorrect answers</p>
                     </div>
                     <div class="incorrectAnswer">
                         <input class="incorrectText3" type="text" placeholder="Incorrect answer 3">
+                        <p class="invalidText hidden">Enter valid incorrect answers</p>
                         <input class="incorrectImage3" type="text" placeholder="Image URL 3">
+                        <p class="invalidText hidden">Enter valid incorrect answers</p>
                     </div>
                 </div>
             </div>`;
@@ -191,65 +211,50 @@ function checkInputsQuestions() {
     const incorrectText3 = document.querySelectorAll(".incorrectText3");
     let inputs = "valid";
 
-        titleQuestions.forEach(elm => {
+    resetCheck();
+
+    titleQuestions.forEach(elm => {
             if (elm.value.length < 20 || typeof(elm.value) !== "string"){
-                alert("Title must cointain at least 20 characters");
+                inputInvalid(elm);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-                return inputs;
-        }
-        colorQuestions.forEach(elm => {
+    colorQuestions.forEach(elm => {
             if (!isColor(elm)) {
-                alert("Enter a valid hexadecimal color");
+                inputInvalid(elm);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-            return inputs;
-        }
-        correctTexts.forEach(elm => { 
+    correctTexts.forEach(elm => { 
             if (elm.value === "") {
-                alert("Enter a correct answer");
+                inputInvalid(elm);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-            return inputs;
-        }
-        correctImages.forEach(elm => {
+    correctImages.forEach(elm => {
             if (!isUrl(elm.value)){
-                alert("Enter a valid URL in all correct answers");
+                inputInvalid(elm);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-            return inputs;
-        }
-        incorrectText1.forEach(elm => { 
+    incorrectText1.forEach(elm => { 
             if (elm.value === "") {
-                alert("Enter at least one incorrect answer in each question");
+                inputInvalid(elm);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-            return inputs;
-        }
-        incorrectImage1.forEach(elm => {
+    incorrectImage1.forEach(elm => {
             if (!isUrl(elm.value)){
-                alert("Enter a valid URL in each incorrect answers");
+                inputInvalid(elm);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-            return inputs;
-        }
-        incorrectText2.forEach(elm => {
-            if ((elm.value === "" && elm.parentNode.lastElementChild.value !== "") || (elm.value !== "" && !isUrl(elm.parentNode.lastElementChild.value))){
-                alert("Enter valid incorrect answers");
+    incorrectText2.forEach(elm => {
+            if ((elm.value === "" && elm.nextElementSibling.nextElementSibling.value !== "") || 
+                (elm.value !== "" && !isUrl(elm.nextElementSibling.nextElementSibling.value))){
+                inputInvalid(elm);
+                inputInvalid(elm.nextElementSibling.nextElementSibling);
                 inputs = "invalid";
             }});
-        if (inputs === "invalid") {
-            return inputs;
-        }
-        incorrectText3.forEach(elm => {
-            if ((elm.value === "" && elm.parentNode.lastElementChild.value !== "") || (elm.value !== "" && !isUrl(elm.parentNode.lastElementChild.value))){
-                alert("Enter valid incorrect answers");
+    incorrectText3.forEach(elm => {
+            if ((elm.value === "" && elm.nextElementSibling.nextElementSibling.value !== "") || 
+                (elm.value !== "" && !isUrl(elm.nextElementSibling.nextElementSibling.value))){
+                inputInvalid(elm);
+                inputInvalid(elm.nextElementSibling.nextElementSibling);
                 inputs = "invalid";
             }});    
     return inputs;
@@ -268,9 +273,13 @@ function renderCreateLevels() {
                 <p>Level ${i+1}</p>
                 <div class="inline levelInputs">
                     <input class="titleLevel" type="text" placeholder="Level text">
+                    <p class="invalidText hidden">At least 10 characters</p>
                     <input class="minValue" type="text" placeholder="Minimum percentage of hits">
+                    <p class="invalidText hidden">One '0' and others 1 to 100</p>
                     <input class="urlImageLevel" type="text" placeholder="Image URL">
+                    <p class="invalidText hidden">Enter a valid URL</p>
                     <input class="levelDescription" type="text" placeholder="Level description">
+                    <p class="invalidText hidden">At least 30 characters</p>
                 </div>
             </div>`;
     }
@@ -343,18 +352,17 @@ function checkInputsLevels() {
     const levelDescription = document.querySelectorAll(".levelDescription");
     let contMinValue = 0;
 
+    resetCheck();
+
     titleLevel.forEach (elm => {
         if(elm.value.length < 10 || typeof(elm.value) !== "string"){
-            alert("Level title must cointain at least 10 characters");
+            inputInvalid(elm);
             inputs = "invalid";
         }
     });
-    if (inputs === "invalid") {
-        return inputs;
-    }
     minValue.forEach (elm => {
         if(!(elm.value >= 0 && elm.value <= 100)){
-            alert("Enter a percentage between 0 and 100");
+            inputInvalid(elm);
             inputs = "invalid";
         }
         if (elm.value == 0) {
@@ -362,24 +370,18 @@ function checkInputsLevels() {
         }
     });
     if (contMinValue !== 1) {
-        alert("One minimum percentage must be 0");
+        minValue.forEach (elm => inputInvalid(elm));
         inputs = "invalid";
-    }
-    if (inputs === "invalid") {
-        return inputs;
     }
     urlImageLevel.forEach(elm => {
         if (!isUrl(elm.value)){
-            alert("Enter a valid URL in all levels");
+            inputInvalid(elm);
             inputs = "invalid";
         }
     });
-    if (inputs === "invalid") {
-        return inputs;
-    }
     levelDescription.forEach (elm => {
         if(elm.value.length < 30 || typeof(elm.value) !== "string"){
-            alert("Level description must cointain at least 30 characters");
+            inputInvalid(elm);
             inputs = "invalid";
         }
     })
@@ -420,12 +422,12 @@ function renderFinishCreation(response) {
     main.innerHTML = `
         <div class="finishCreationPage">
             <p class="creationQuestionsTitle">Your quizz is finished!</p>
-            <div class="quizz" onclick="getOnlyQuizz(${quizzEditing.id})">
-                <img src="${quizzEditing.image}" alt="">
-                <h3>${quizzEditing.title}</h3>
+            <div class="quizz" onclick="getOnlyQuizz(${response.data.id})">
+                <img src="${response.data.image}" alt="">
+                <h3>${response.data.title}</h3>
                 <div class="gradient"></div> 
             </div>
-            <button class="access" onclick="getOnlyQuizz(${quizzEditing.id})">Access quiz</button>
+            <button class="access" onclick="getOnlyQuizz(${response.data.id})">Access quiz</button>
             <button class="toHome" onclick="window.location.reload()">Back to homepage</button>
         </div>`;
 }
@@ -445,21 +447,6 @@ function saveOnLocalStorage(id, key){
     }
 }
 
-document.addEventListener("keyup", function (event) {
-    if (event.key === "Enter" && document.querySelector(".createInputs")) {
-        createQuizz();
-        return;
-    }
-    if (event.key === "Enter" && document.querySelector(".creationQuestions")) {
-        createQuestions();
-        return;
-    }
-    if (event.key === "Enter" && document.querySelector(".creationLevels")) {
-        createLevels();
-        return;
-    }
-});
-
 function error() {
     alert("error sending quizz"); 
 }
@@ -478,4 +465,52 @@ function renderEditPage(quizz) {
     isEdition = true;
     quizzEditing = quizz;
     renderCreationPage();
+}
+
+function inputInvalid(input) {
+    input.classList.add("inputInvalid");
+    input.nextElementSibling.classList.remove("hidden");
+    input.style.marginBottom = "0";
+}
+
+function resetCheck() {
+    const allInvalidInputs = document.querySelectorAll(".inputInvalid");
+    const allInvalidTexts = document.querySelectorAll(".invalidText");
+
+    allInvalidInputs.forEach(elm => {
+        elm.classList.remove("inputInvalid");
+        elm.style.marginBottom = "15px";
+    });
+    allInvalidTexts.forEach(elm => {
+        if(!elm.classList.contains("hidden"))
+        elm.classList.add("hidden")});
+}
+
+function checkInputsInitial() {
+    const createTitle = document.querySelector(".createTitle");
+    const createImage = document.querySelector(".createImage");
+    const createQttQuestions = document.querySelector(".createQttQuestions");
+    const createQttLevels = document.querySelector(".createQttLevels");
+    let inputs = "valid";
+
+    resetCheck();
+
+    if (createTitle.value.length < 20 || createTitle.value.length > 65) {
+        inputInvalid(createTitle);
+        inputs = "invalid";
+    }
+    if (!isUrl(createImage.value)){
+        inputInvalid(createImage);
+        inputs = "invalid";
+    }
+    if (createQttQuestions.value < 3 || isNaN(createQttQuestions.value)){
+        inputInvalid(createQttQuestions);
+        inputs = "invalid";
+    }
+    if (createQttLevels.value < 2 || isNaN(createQttLevels.value)){
+        inputInvalid(createQttLevels);
+        inputs = "invalid";
+    }
+
+    return inputs;
 }
