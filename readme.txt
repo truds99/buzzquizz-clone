@@ -1,1 +1,0 @@
-Optei por fazer uma Media Query intermediária por questão de design.
